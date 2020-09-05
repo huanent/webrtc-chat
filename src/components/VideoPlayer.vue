@@ -1,11 +1,17 @@
 <template>
   <div class="player">
-    <video ref="video" autoplay muted :style="{ objectFit: fit }"></video>
+    <video
+      ref="video"
+      autoplay
+      :muted="muted"
+      :style="{ objectFit: fit }"
+      :class="{ mirror: mirror }"
+    ></video>
   </div>
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 export default {
   props: {
     stream: {
@@ -16,17 +22,26 @@ export default {
       type: String,
       default: "cover",
     },
+    muted: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
+    mirror: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
   },
-  setup() {
+  setup(props) {
     const video = ref(null);
 
-    onMounted(async () => {
-      let stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
-      });
-      video.value.srcObject = stream;
-    });
+    watch(
+      () => props.stream,
+      () => {
+        if (video.value) video.value.srcObject = props.stream;
+      }
+    );
 
     return {
       video,
@@ -36,9 +51,28 @@ export default {
 </script>
 
 <style scoped>
+.player {
+  position: relative;
+}
+
 .player,
 video {
   width: 100%;
   height: 100%;
+}
+
+.player::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0.2;
+  background: black;
+}
+
+.mirror {
+  transform: rotateY(180deg);
 }
 </style>
