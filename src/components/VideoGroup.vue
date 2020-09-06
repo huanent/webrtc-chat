@@ -1,4 +1,5 @@
 <template>
+  <!-- <video-player class="player fill" :stream="localStream" /> -->
   <video-player class="player fill" :stream="localStream" />
 </template>
 
