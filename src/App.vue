@@ -1,16 +1,19 @@
 <template>
   <div class="container fill">
     <video-group />
+    <ctrl-bar />
   </div>
 </template>
 
 <script>
 import VideoGroup from "./components/VideoGroup.vue";
+import CtrlBar from "./components/CtrlBar.vue";
 
 export default {
   name: "App",
   components: {
     VideoGroup,
+    CtrlBar,
   },
 };
 </script>

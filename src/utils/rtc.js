@@ -9,31 +9,36 @@ export async function getLocalStream() {
   return stream;
 }
 
-export async function createRoom(isOffer, callback) {
-  const im = await createIM("23432", async (e) => {
-    if (e.type == "ice") {
-      pc.addIceCandidate(new RTCIceCandidate(e.candidate));
+export async function createRoom(isOffer, localStream, callback) {
+  const sendMsg = await createIM("23432", async (e) => {
+    if (e.type == "ice" && e.data) {
+      console.log(e);
+      pc.addIceCandidate(new RTCIceCandidate(e.data));
     }
 
-    if ((e.type = "offer")) {
-      await pc.setRemoteDescription(new RTCSessionDescription(e.sdp));
+    if (e.type == "offer") {
+      await pc.setRemoteDescription(new RTCSessionDescription(e.data));
       const answer = await pc.createAnswer();
-      await pc.setLocalDescription(answer.sdp);
-      im.send({ type: "answer", sdp: answer.sdp });
+      await pc.setLocalDescription(answer);
+      sendMsg("answer", answer);
     }
 
-    if ((e.type = "answer")) {
-      await pc.setRemoteDescription(e.sdp);
+    if (e.type == "answer") {
+      await pc.setRemoteDescription(new RTCSessionDescription(e.data));
     }
   });
 
   let pc = new RTCPeerConnection();
-  pc.onicecandidate((e) => im.send({ type: "ice", ice: e.candidate }));
-  pc.onaddstream((e) => callback(e.stream));
+
+  pc.addStream(localStream);
+
+  pc.onicecandidate = (e) => sendMsg("ice", e.candidate);
+
+  pc.onaddstream = (e) => callback(e.stream);
 
   if (isOffer) {
     let offer = await pc.createOffer();
-    await pc.setLocalDescription(offer.sdp);
-    im.send({ type: "offer", sdp: offer.sdp });
+    await pc.setLocalDescription(offer);
+    sendMsg("offer", offer);
   }
 }
