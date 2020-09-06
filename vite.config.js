@@ -1,4 +1,5 @@
 export default {
-  base: "/docs",
+  base: "/webrtc-chat",
   outDir: "docs",
+  assetsDir: "",
 };
