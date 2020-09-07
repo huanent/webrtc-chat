@@ -2,18 +2,29 @@
   <div class="container fill">
     <video-group />
     <ctrl-bar />
+    <share-url v-if="showShareUrl" />
   </div>
 </template>
 
 <script>
 import VideoGroup from "./components/VideoGroup.vue";
 import CtrlBar from "./components/CtrlBar.vue";
+import ShareUrl from "./components/ShareUrl.vue";
+import { isOffer } from "./utils/common";
+import { ref } from "vue";
 
 export default {
   name: "App",
   components: {
     VideoGroup,
     CtrlBar,
+    ShareUrl,
+  },
+  setup() {
+    const showShareUrl = ref(!isOffer());
+    return {
+      showShareUrl,
+    };
   },
 };
 </script>
