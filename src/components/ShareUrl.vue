@@ -36,6 +36,7 @@
       ></path>
     </svg>
     <canvas ref="qrcode"></canvas>
+    <code>{{ url }}</code>
   </div>
 </template>
 
@@ -47,13 +48,14 @@ export default {
   setup() {
     const expand = ref(false);
     const qrcode = ref(null);
+    const url = location.href + "?is-offer=true";
 
     const onClick = () => (expand.value = !expand.value);
 
     onMounted(() => {
       QRCode.toCanvas(
         qrcode.value,
-        location.href + "?is-offer=true",
+        url,
         {
           margin: 1,
           width: 300,
@@ -69,6 +71,7 @@ export default {
       expand,
       onClick,
       qrcode,
+      url,
     };
   },
 };
@@ -92,9 +95,15 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
 .qrcode canvas {
   width: 400px;
   width: 400px;
+}
+.qrcode code {
+  line-height: 30px;
+  font-size: 18px;
+  color: white;
 }
 </style>

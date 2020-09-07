@@ -44,11 +44,13 @@ export default {
 }
 
 .float {
-  width: 100px;
+  width: 150px;
   height: 100px;
-  border-radius: 50%;
+  border-radius: 5%;
   left: 15px;
   top: 15px;
+  overflow: hidden;
+  box-shadow: rgba(0, 0, 0, 0.397) 5px 5px 10px;
 }
 </style>
 
