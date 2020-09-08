@@ -21,6 +21,7 @@ export default {
     ShareUrl,
   },
   setup() {
+    document.addEventListener("dragover", (e) => e.preventDefault());
     const showShareUrl = ref(!isOffer());
     return {
       showShareUrl,

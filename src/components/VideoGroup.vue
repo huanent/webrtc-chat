@@ -3,7 +3,7 @@
   <video-player
     class="player fill"
     :stream="localStream"
-    :class="{ float: oppositeStream }"
+    :float="!!oppositeStream"
   />
 </template>
 
@@ -38,20 +38,6 @@ export default {
 </script>
 
 <style scoped>
-.player {
-  position: absolute;
-  transition: all 0.3s;
-}
-
-.float {
-  width: 150px;
-  height: 100px;
-  border-radius: 5%;
-  left: 15px;
-  top: 15px;
-  overflow: hidden;
-  box-shadow: rgba(0, 0, 0, 0.397) 5px 5px 10px;
-}
 </style>
 
 
