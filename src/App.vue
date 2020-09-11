@@ -3,6 +3,7 @@
     <video-group />
     <ctrl-bar />
     <share-url v-if="showShareUrl" />
+    <tool-bar />
   </div>
 </template>
 
@@ -10,6 +11,7 @@
 import VideoGroup from "./components/VideoGroup.vue";
 import CtrlBar from "./components/CtrlBar.vue";
 import ShareUrl from "./components/ShareUrl.vue";
+import ToolBar from "./components/ToolBar.vue";
 import { isOffer } from "./utils/common";
 import { ref } from "vue";
 
@@ -19,6 +21,7 @@ export default {
     VideoGroup,
     CtrlBar,
     ShareUrl,
+    ToolBar,
   },
   setup() {
     document.addEventListener("dragover", (e) => e.preventDefault());
