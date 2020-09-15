@@ -12,6 +12,7 @@ import { onMounted, ref } from "vue";
 import VideoPlayer from "./VideoPlayer.vue";
 import { getLocalStream, createRoom } from "../utils/rtc";
 import { isOffer } from "../utils/common";
+import { eventBus } from "../utils/common";
 
 export default {
   components: {
@@ -22,11 +23,9 @@ export default {
     const oppositeStream = ref(null);
     onMounted(async () => {
       localStream.value = await getLocalStream();
-      createRoom(
-        isOffer(),
-        localStream.value,
-        (e) => (oppositeStream.value = e)
-      );
+      eventBus.emit("add_local_stream", localStream.value);
+      eventBus.on("onaddstream", (e) => (oppositeStream.value = e));
+      createRoom(isOffer(), localStream.value);
     });
 
     return {

@@ -3,7 +3,7 @@
     class="btn"
     :style="{ width: size + 'px', height: size + 'px', backgroundColor: color }"
   >
-    <slot class="inner"></slot>
+    <slot></slot>
   </div>
 </template>
 

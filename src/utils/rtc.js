@@ -1,4 +1,5 @@
 import { createIM } from "./im";
+import { eventBus } from "./common";
 
 export async function getLocalStream() {
   let stream = await navigator.mediaDevices.getUserMedia({
@@ -9,10 +10,9 @@ export async function getLocalStream() {
   return stream;
 }
 
-export async function createRoom(isOffer, localStream, callback) {
+export async function createRoom(isOffer, localStream) {
   const sendMsg = await createIM("23432", async (e) => {
     if (e.type == "ice" && e.data) {
-      console.log(e);
       pc.addIceCandidate(new RTCIceCandidate(e.data));
     }
 
@@ -34,7 +34,7 @@ export async function createRoom(isOffer, localStream, callback) {
 
   pc.onicecandidate = (e) => sendMsg("ice", e.candidate);
 
-  pc.onaddstream = (e) => callback(e.stream);
+  pc.onaddstream = (e) => eventBus.emit("onaddstream", e.stream);
 
   if (isOffer) {
     let offer = await pc.createOffer();

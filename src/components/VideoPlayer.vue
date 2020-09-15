@@ -13,6 +13,7 @@
       :muted="muted"
       :style="{ objectFit: fit }"
       :class="{ mirror: mirror }"
+      :srcObject="stream"
     ></video>
   </div>
 </template>
@@ -22,7 +23,7 @@ import { onMounted, ref, watch } from "vue";
 export default {
   props: {
     stream: {
-      type: MediaStream,
+      type: Object,
       required: false,
     },
     fit: {
@@ -49,13 +50,6 @@ export default {
     const video = ref(null);
     const player = ref(null);
     let offset = { x: 0, y: 0 };
-
-    watch(
-      () => props.stream,
-      () => {
-        if (video.value) video.value.srcObject = props.stream;
-      }
-    );
 
     watch(
       () => props.float,
