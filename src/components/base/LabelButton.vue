@@ -14,7 +14,7 @@ export default {
     },
     selected: {
       type: Boolean,
-      default: true,
+      default: false,
     },
   },
   setup(props, ctx) {
@@ -46,6 +46,7 @@ export default {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  margin: 0 10px;
 }
 .label {
   color: white;
