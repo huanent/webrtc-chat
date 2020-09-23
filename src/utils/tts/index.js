@@ -1,5 +1,4 @@
 import transcode from "./transcode";
-import { eventBus } from "../common";
 import { connectWs, wsSend } from "./socket";
 let _audioContext;
 let _audioData = [];
@@ -30,16 +29,27 @@ export function start(stream) {
 
 async function speakChecker(e) {
   if (e > 0.3) _muteTime = timeNow();
-  if (_spaking) {
+  if (_speaking) {
     if (e < 0.3 && timeNow() - _muteTime > 1000) {
-      _spaking = false;
-      wsSend(_wss.shift(), key, secert, appId, _audioData);
+      _speaking = false;
+      wsSend(
+        _wss.shift(),
+        "189993a680091a4f5b2f0de36e53c992",
+        "7ac8d8cf08c0678d762b8ca14d40fc02",
+        "5f3a30fa",
+        _audioData
+      );
     }
   } else {
     if (e > 0.3) {
       _muteTime = timeNow();
-      _spaking = true;
-      _wss.push(await connectWs(key, secert));
+      _speaking = true;
+      _wss.push(
+        await connectWs(
+          "189993a680091a4f5b2f0de36e53c992",
+          "7ac8d8cf08c0678d762b8ca14d40fc02"
+        )
+      );
     }
   }
 }

@@ -1,4 +1,3 @@
-import CryptoJS from "crypto-js";
 import { eventBus } from "../common";
 
 export async function connectWs(key, srcret) {
@@ -13,7 +12,7 @@ export async function connectWs(key, srcret) {
       for (let i = 0; i < ws.length; i++) {
         str = str + ws[i].cw[0].w;
       }
-      eventBus.emit("ws_onmessage", str);
+      if (str) eventBus.emit("ws_onmessage", str);
       _ws.close();
     }
   };

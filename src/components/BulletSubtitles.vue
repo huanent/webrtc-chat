@@ -11,7 +11,6 @@ export default {
     const msgs = ref([]);
     eventBus.on("add_local_stream", start);
     eventBus.on("ws_onmessage", (e) => msgs.value.push(e));
-
     onBeforeUnmount(stop);
 
     return {
