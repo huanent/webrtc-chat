@@ -42,3 +42,25 @@ export async function createRoom(isOffer, localStream) {
     sendMsg("offer", offer);
   }
 }
+
+export async function recordSrceen() {
+  const stream = await navigator.mediaDevices.getDisplayMedia({
+    video: true,
+    audio: true,
+  });
+
+  var mediaRecorder = new MediaRecorder(stream);
+  mediaRecorder.start();
+
+  mediaRecorder.ondataavailable = (e) => {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(e.data);
+    a.download = `${new Date().getTime()}.webm`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    a.remove();
+    stream.getTracks().forEach((t) => t.stop());
+  };
+
+  return mediaRecorder;
+}
