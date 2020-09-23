@@ -5,6 +5,7 @@ let _audioData = [];
 let _speaking = false;
 let _muteTime = timeNow();
 let _wss = [];
+let _threshold = 0.2;
 
 export function stop() {
   if (_audioContext) _audioContext.close();
@@ -28,9 +29,9 @@ export function start(stream) {
 }
 
 async function speakChecker(e) {
-  if (e > 0.3) _muteTime = timeNow();
+  if (e > _threshold) _muteTime = timeNow();
   if (_speaking) {
-    if (e < 0.3 && timeNow() - _muteTime > 1000) {
+    if (e < _threshold && timeNow() - _muteTime > 1000) {
       _speaking = false;
       wsSend(
         _wss.shift(),
@@ -41,7 +42,7 @@ async function speakChecker(e) {
       );
     }
   } else {
-    if (e > 0.3) {
+    if (e > _threshold) {
       _muteTime = timeNow();
       _speaking = true;
       _wss.push(

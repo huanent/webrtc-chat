@@ -4,7 +4,7 @@
     <ctrl-bar />
     <share-url v-if="showShareUrl" />
     <tool-bar />
-    <bullet-subtitles />
+    <scroll-caption />
   </div>
 </template>
 
@@ -13,7 +13,7 @@ import VideoGroup from "./components/VideoGroup.vue";
 import CtrlBar from "./components/CtrlBar.vue";
 import ShareUrl from "./components/ShareUrl.vue";
 import ToolBar from "./components/ToolBar.vue";
-import BulletSubtitles from "./components/BulletSubtitles.vue";
+import ScrollCaption from "./components/ScrollCaption.vue";
 import { isOffer } from "./utils/common";
 import { ref } from "vue";
 
@@ -24,7 +24,7 @@ export default {
     CtrlBar,
     ShareUrl,
     ToolBar,
-    BulletSubtitles,
+    ScrollCaption,
   },
   setup() {
     document.addEventListener("dragover", (e) => e.preventDefault());

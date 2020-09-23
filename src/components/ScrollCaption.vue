@@ -1,5 +1,7 @@
 <template>
-  <div v-for="(item, index) in msgs" :key="index">{{ item }}</div>
+  <div class="caption">
+    <div v-for="(item, index) in msgs" :key="index">{{ item }}</div>
+  </div>
 </template>
 
 <script>
@@ -10,7 +12,10 @@ export default {
   setup() {
     const msgs = ref([]);
     eventBus.on("add_local_stream", start);
-    eventBus.on("ws_onmessage", (e) => msgs.value.push(e));
+    eventBus.on("ws_onmessage", (e) => {
+      console.log(e);
+      msgs.value.push(e);
+    });
     onBeforeUnmount(stop);
 
     return {
@@ -20,5 +25,12 @@ export default {
 };
 </script>
 
-<style>
+<style scoped >
+.caption {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  max-height: 90%;
+  overflow-y: auto;
+}
 </style>

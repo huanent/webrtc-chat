@@ -50,10 +50,10 @@ export async function wsSend(_ws, key, srcret, appId, audioData) {
         app_id: appId,
       },
       business: {
-        language: "en_us", //小语种可在控制台--语音听写（流式）--方言/语种处添加试用
+        language: "zh_cn",
         domain: "iat",
         vad_eos: 5000,
-        dwa: "wpgs", //为使该功能生效，需到控制台开通动态修正功能（该功能免费）
+        dwa: "wpgs",
       },
       data: {
         status: 0,
