@@ -20,30 +20,9 @@ export async function connectWs(key, srcret) {
   return _ws;
 }
 
-function getWebSocketUrl(key, srcret) {
-  return new Promise((resolve) => {
-    var url = "wss://iat-api.xfyun.cn/v2/iat";
-    var host = "iat-api.xfyun.cn";
-    var date = new Date().toGMTString();
-    var algorithm = "hmac-sha256";
-    var headers = "host date request-line";
-    var signatureOrigin = `host: ${host}\ndate: ${date}\nGET /v2/iat HTTP/1.1`;
-    var signatureSha = CryptoJS.HmacSHA256(signatureOrigin, srcret);
-    var signature = CryptoJS.enc.Base64.stringify(signatureSha);
-    var authorizationOrigin = `api_key="${key}", algorithm="${algorithm}", headers="${headers}", signature="${signature}"`;
-    var authorization = btoa(authorizationOrigin);
-    url = `${url}?authorization=${authorization}&date=${date}&host=${host}`;
-    resolve(url);
-  });
-}
+
 
 export async function wsSend(_ws, key, srcret, appId, audioData) {
-  if (_ws.readyState > 1) return;
-
-  while (_ws.readyState == 0) {
-    await new Promise((rs) => setTimeout(rs), 50);
-  }
-
   _ws.send(
     JSON.stringify({
       common: {

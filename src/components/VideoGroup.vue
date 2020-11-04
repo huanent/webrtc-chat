@@ -1,36 +1,35 @@
 <template>
-  <video-player class="player fill" :stream="oppositeStream" />
+  <video-player class="player fill" :stream="remoteCamera" />
   <video-player
     class="player fill"
-    :stream="localStream"
-    :float="!!oppositeStream"
+    :stream="localCamera"
+    :float="!!remoteCamera"
   />
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
+import { onMounted } from "vue";
 import VideoPlayer from "./VideoPlayer.vue";
-import { getLocalStream, createRoom } from "../utils/rtc";
 import { isOffer } from "../utils/common";
-import { eventBus } from "../utils/common";
+
+import {
+  localCamera,
+  remoteCamera,
+  enterRoom,
+} from "../services/streamService";
 
 export default {
   components: {
     VideoPlayer,
   },
   setup() {
-    const localStream = ref(null);
-    const oppositeStream = ref(null);
     onMounted(async () => {
-      localStream.value = await getLocalStream();
-      eventBus.emit("add_local_stream", localStream.value);
-      eventBus.on("onaddstream", (e) => (oppositeStream.value = e));
-      createRoom(isOffer(), localStream.value);
+      enterRoom("1234", isOffer());
     });
 
     return {
-      localStream,
-      oppositeStream,
+      localCamera,
+      remoteCamera,
     };
   },
 };
