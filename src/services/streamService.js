@@ -1,14 +1,12 @@
 import { ref } from "vue";
 import { getLocalStream } from "../utils/rtc";
-import { createIM } from "../utils/im";
+import * as imService from "./imService";
 
 export const localCamera = ref(null);
-export const localSrceen = ref(null);
 export const remoteCamera = ref(null);
-export const remoteSrceen = ref(null);
 
 export async function enterRoom(roomId, isOffer) {
-  const sendMsg = await createIM(roomId, async (e) => {
+  await imService.create(roomId, async (e) => {
     if (e.type == "ice" && e.data) {
       pc.addIceCandidate(new RTCIceCandidate(e.data));
     }
@@ -28,12 +26,12 @@ export async function enterRoom(roomId, isOffer) {
   let pc = new RTCPeerConnection();
   localCamera.value = await getLocalStream();
   pc.addStream(localCamera.value);
-  pc.onicecandidate = (e) => sendMsg("ice", e.candidate);
+  pc.onicecandidate = (e) => imService.send("ice", e.candidate);
   pc.onaddstream = (e) => (remoteCamera.value = e.stream);
 
   if (isOffer) {
     let offer = await pc.createOffer();
     await pc.setLocalDescription(offer);
-    sendMsg("offer", offer);
+    imService.sendÎ("offer", offer);
   }
 }
