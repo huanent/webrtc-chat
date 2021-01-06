@@ -1,9 +1,17 @@
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 export const messages = ref([]);
 export const recognizing = ref(null);
+export const enableAsr = ref(false);
 
-export function startAsr(stream) {
+let recognizer;
+
+watch(enableAsr, (value) => {
+  if (value) start();
+  else stop();
+});
+
+function start() {
   const speechTranslationConfig = SpeechSDK.SpeechTranslationConfig.fromSubscription(
     "db2a9a09ac264dcd96c7ecae4537a8c6",
     "eastasia"
@@ -12,7 +20,7 @@ export function startAsr(stream) {
   speechTranslationConfig.speechRecognitionLanguage = "zh-CN";
   speechTranslationConfig.addTargetLanguage("en-US");
   const audioConfig = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
-  const recognizer = new SpeechSDK.TranslationRecognizer(
+  recognizer = new SpeechSDK.TranslationRecognizer(
     speechTranslationConfig,
     audioConfig
   );
@@ -27,8 +35,8 @@ export function startAsr(stream) {
   recognizer.recognized = (s, e) => {
     if (e.result.reason == SpeechSDK.ResultReason.NoMatch) {
       console.log("NOMATCH: Speech could not be translated.");
-    } else {
-      messages.value.push({
+    } else if (e.result.text) {
+      messages.value.unshift({
         zh: e.result.text,
         en: e.result.translations.privMap.privValues[0],
       });
@@ -52,4 +60,8 @@ export function startAsr(stream) {
   };
 
   recognizer.startContinuousRecognitionAsync();
+}
+
+function stop() {
+  recognizer.stopContinuousRecognitionAsync();
 }

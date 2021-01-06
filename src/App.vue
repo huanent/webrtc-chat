@@ -15,7 +15,7 @@ import ShareUrl from "./components/ShareUrl.vue";
 import ToolBar from "./components/ToolBar.vue";
 import ScrollCaption from "./components/ScrollCaption.vue";
 import { isOffer } from "./utils/common";
-import { ref } from "vue";
+import { ref } from "vue"
 
 export default {
   name: "App",

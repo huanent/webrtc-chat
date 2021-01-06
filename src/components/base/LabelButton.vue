@@ -1,41 +1,26 @@
 <template>
-  <div class="label-button" @click="onClick">
-    <div class="icon" :class="{ selected: selected }" ref="iconContainer"></div>
+  <div class="label-button">
+    <div class="icon" :class="{ selected: selected }">
+      <img :src="src" />
+    </div>
     <p class="label">{{ label }}</p>
   </div>
 </template>
 <script>
-import { render, ref, onMounted } from "vue";
 export default {
   props: {
     label: {
       type: String,
       required: true,
     },
+    src: {
+      type: String,
+      default: "",
+    },
     selected: {
       type: Boolean,
       default: false,
     },
-  },
-  setup(props, ctx) {
-    const onClick = () => ctx.emit("update:selected", !props.selected);
-    const iconContainer = ref(null);
-
-    onMounted(() => {
-      let svg = ctx.slots.default()[0];
-      if (svg) {
-        svg.props.style = {
-          minWidth: "40px",
-          minHeight: "40px",
-        };
-      }
-      render(svg, iconContainer.value);
-    });
-
-    return {
-      onClick,
-      iconContainer,
-    };
   },
 };
 </script>
@@ -48,20 +33,25 @@ export default {
   flex-direction: column;
   margin: 0 10px;
 }
+
 .label {
   color: white;
   font-size: 10px;
+  margin: 5px;
 }
+
 .icon {
-  min-width: 40px;
-  min-height: 40px;
   border-radius: 50%;
-  padding: 3px;
+  padding: 8px;
   display: flex;
-  justify-content: center;
-  align-items: center;
 }
+
 .selected {
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.icon img {
+  width: 30px;
+  height: 30px;
 }
 </style>
