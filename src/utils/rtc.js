@@ -33,7 +33,9 @@ export async function createRoom(isOffer) {
 
   let pc = new RTCPeerConnection();
   localStream.value = await getLocalStream();
-  pc.addStream(localStream.value);
+  localStream.value
+    .getTracks()
+    .forEach((track) => pc.addTrack(track, localStream.value));
   pc.onicecandidate = (e) => sendMsg("ice", e.candidate);
   pc.onaddstream = (e) => (oppositeStream.value = e.stream);
 
