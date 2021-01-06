@@ -1,25 +1,32 @@
 <template>
   <div class="caption">
-    <div v-for="(item, index) in msgs" :key="index">{{ item }}</div>
+    <div v-for="(item, index) in messages" :key="index">
+      <div>{{ item.zh }}</div>
+      <div>{{ item.en }}</div>
+    </div>
+    <div v-if="recognizing">
+      <div>{{ recognizing.zh }}</div>
+      <div>{{ recognizing.en }}</div>
+    </div>
   </div>
 </template>
 
 <script>
-import { onBeforeUnmount, ref } from "vue";
-import { eventBus } from "../utils/common";
-import { start, stop } from "../utils/tts";
+import { watch, ref } from "vue";
+import { eventBus, isOffer } from "../utils/common";
+import { messages, recognizing, startAsr } from "../utils/asr";
+import { localStream } from "../utils/rtc";
 export default {
   setup() {
-    const msgs = ref([]);
-    eventBus.on("add_local_stream", start);
-    eventBus.on("ws_onmessage", (e) => {
-      console.log(e);
-      msgs.value.push(e);
-    });
-    onBeforeUnmount(stop);
+    if (!isOffer()) {
+      watch(localStream, (value) => {
+        if (value) startAsr(value);
+      });
+    }
 
     return {
-      msgs,
+      messages,
+      recognizing,
     };
   },
 };
@@ -28,9 +35,13 @@ export default {
 <style scoped >
 .caption {
   position: absolute;
-  bottom: 15px;
-  right: 15px;
-  max-height: 90%;
+  bottom: 100px;
+  right: 0;
+  left: 0;
   overflow-y: auto;
+  text-align: center;
+  max-height: 150px;
+  color: white;
+  font-size: 12px;
 }
 </style>

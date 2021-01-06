@@ -1,7 +1,10 @@
 import { createIM } from "./im";
-import { eventBus } from "./common";
+import { ref } from "vue";
 
-export async function getLocalStream() {
+export const localStream = ref(null);
+export const oppositeStream = ref(null);
+
+async function getLocalStream() {
   let stream = await navigator.mediaDevices.getUserMedia({
     video: true,
     audio: true,
@@ -10,7 +13,7 @@ export async function getLocalStream() {
   return stream;
 }
 
-export async function createRoom(isOffer, localStream) {
+export async function createRoom(isOffer) {
   const sendMsg = await createIM("23432", async (e) => {
     if (e.type == "ice" && e.data) {
       pc.addIceCandidate(new RTCIceCandidate(e.data));
@@ -29,12 +32,10 @@ export async function createRoom(isOffer, localStream) {
   });
 
   let pc = new RTCPeerConnection();
-
-  pc.addStream(localStream);
-
+  localStream.value = await getLocalStream();
+  pc.addStream(localStream.value);
   pc.onicecandidate = (e) => sendMsg("ice", e.candidate);
-
-  pc.onaddstream = (e) => eventBus.emit("onaddstream", e.stream);
+  pc.onaddstream = (e) => (oppositeStream.value = e.stream);
 
   if (isOffer) {
     let offer = await pc.createOffer();
