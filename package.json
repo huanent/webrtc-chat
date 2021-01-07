@@ -7,7 +7,6 @@
   },
   "dependencies": {
     "mitt": "^2.1.0",
-    "qrcode": "^1.4.4",
     "vue": "^3.0.5"
   },
   "devDependencies": {

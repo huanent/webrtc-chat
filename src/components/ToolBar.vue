@@ -21,8 +21,8 @@
 <script>
 import { ref } from "vue";
 import LabelButton from "./base/LabelButton.vue";
-import { recordSrceen } from "../utils/rtc";
-import { enableAsr } from "../utils/asr";
+import { recordSrceen } from "../services/rtc";
+import { enableAsr } from "../services/asr";
 
 export default {
   components: {

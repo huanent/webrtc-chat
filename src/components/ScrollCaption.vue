@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { messages, recognizing } from "../utils/asr";
+import { messages, recognizing } from "../services/asr";
 export default {
   setup() {
     return {

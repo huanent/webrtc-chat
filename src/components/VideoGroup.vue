@@ -10,9 +10,9 @@
 <script>
 import { onMounted, ref } from "vue";
 import VideoPlayer from "./VideoPlayer.vue";
-import { oppositeStream, createRoom, localStream } from "../utils/rtc";
-import { isOffer } from "../utils/common";
-import { eventBus } from "../utils/common";
+import { oppositeStream, createRoom, localStream } from "../services/rtc";
+import { isOffer } from "../services/common";
+import { eventBus } from "../services/common";
 
 export default {
   components: {
