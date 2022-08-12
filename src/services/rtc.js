@@ -65,7 +65,7 @@ export async function createRoom(isOffer) {
   }
 }
 
-export async function recordSrceen() {
+export async function recordScreen() {
   const stream = await navigator.mediaDevices.getDisplayMedia({
     video: true,
     audio: true,

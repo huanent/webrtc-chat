@@ -21,7 +21,7 @@
 <script>
 import { ref } from "vue";
 import LabelButton from "./base/LabelButton.vue";
-import { recordSrceen } from "../services/rtc";
+import { recordScreen } from "../services/rtc";
 import { enableAsr } from "../services/asr";
 
 export default {
@@ -33,7 +33,7 @@ export default {
 
     const record = async () => {
       if (!recorder.value) {
-        recorder.value = await recordSrceen();
+        recorder.value = await recordScreen();
       } else {
         recorder.value.stop();
         recorder.value = null;
