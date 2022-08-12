@@ -31,7 +31,26 @@ export async function createRoom(isOffer) {
     }
   });
 
-  let pc = new RTCPeerConnection();
+  let pc = new RTCPeerConnection({
+    iceServers:[{
+      urls:[
+        "stun:23.21.150.121",
+        "stun:stun01.sipphone.com",
+        "stun:stun.ekiga.net",
+        "stun:stun.fwdnet.net",
+        "stun:stun.ideasip.com",
+        "stun:stun.iptel.org",
+        "stun:stun.rixtelecom.se",
+        "stun:stun.schlund.de",
+        "stun:stunserver.org",
+        "stun:stun.softjoys.com",
+        "stun:stun.voiparound.com",
+        "stun:stun.voipbuster.com",
+        "stun:stun.voipstunt.com",
+        "stun:stun.voxgratia.org",
+        "stun:stun.xten.com"]
+    }]
+  });
   localStream.value = await getLocalStream();
   localStream.value
     .getTracks()
