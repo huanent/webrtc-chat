@@ -1,8 +1,8 @@
 import { createIM } from "./im";
 import { ref } from "vue";
 
-export const localStream = ref(null);
-export const oppositeStream = ref(null);
+export const localStream = ref<MediaStream>();
+export const oppositeStream = ref<MediaStream>();
 
 async function getLocalStream() {
   let stream = await navigator.mediaDevices.getUserMedia({
@@ -13,8 +13,8 @@ async function getLocalStream() {
   return stream;
 }
 
-export async function createRoom(isOffer) {
-  const sendMsg = await createIM("23432", async (e) => {
+export async function createRoom(isOffer: boolean) {
+  const sendMsg = await createIM("23432", async (e: any) => {
     if (e.type == "ice" && e.data) {
       pc.addIceCandidate(new RTCIceCandidate(e.data));
     }
@@ -32,31 +32,36 @@ export async function createRoom(isOffer) {
   });
 
   let pc = new RTCPeerConnection({
-    iceServers:[{
-      urls:[
-        "stun:23.21.150.121",
-        "stun:stun01.sipphone.com",
-        "stun:stun.ekiga.net",
-        "stun:stun.fwdnet.net",
-        "stun:stun.ideasip.com",
-        "stun:stun.iptel.org",
-        "stun:stun.rixtelecom.se",
-        "stun:stun.schlund.de",
-        "stun:stunserver.org",
-        "stun:stun.softjoys.com",
-        "stun:stun.voiparound.com",
-        "stun:stun.voipbuster.com",
-        "stun:stun.voipstunt.com",
-        "stun:stun.voxgratia.org",
-        "stun:stun.xten.com"]
-    }]
+    iceServers: [
+      {
+        urls: [
+          "stun:23.21.150.121",
+          "stun:stun01.sipphone.com",
+          "stun:stun.ekiga.net",
+          "stun:stun.fwdnet.net",
+          "stun:stun.ideasip.com",
+          "stun:stun.iptel.org",
+          "stun:stun.rixtelecom.se",
+          "stun:stun.schlund.de",
+          "stun:stunserver.org",
+          "stun:stun.softjoys.com",
+          "stun:stun.voiparound.com",
+          "stun:stun.voipbuster.com",
+          "stun:stun.voipstunt.com",
+          "stun:stun.voxgratia.org",
+          "stun:stun.xten.com",
+        ],
+      },
+    ],
   });
   localStream.value = await getLocalStream();
+
   localStream.value
     .getTracks()
-    .forEach((track) => pc.addTrack(track, localStream.value));
+    .forEach((track) => pc.addTrack(track, localStream.value!));
+
   pc.onicecandidate = (e) => sendMsg("ice", e.candidate);
-  pc.onaddstream = (e) => (oppositeStream.value = e.stream);
+  pc.ontrack = (e) => (oppositeStream.value = e.streams[0]);
 
   if (isOffer) {
     let offer = await pc.createOffer();

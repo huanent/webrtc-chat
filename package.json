@@ -1,16 +1,36 @@
 {
   "name": "webrtc-chat",
+  "private": true,
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "mitt": "^2.1.0",
-    "vue": "^3.0.5"
+    "element-plus": "^2.2.12",
+    "mitt": "^3.0.0",
+    "vue": "^3.2.37"
   },
   "devDependencies": {
-    "@vue/compiler-sfc": "^3.0.5",
-    "vite": "^1.0.0-rc.13"
+    "@types/node": "^18.7.2",
+    "@typescript-eslint/parser": "^5.33.0",
+    "@vitejs/plugin-vue": "^3.0.2",
+    "@vue/eslint-config-prettier": "^7.0.0",
+    "autoprefixer": "^10.4.8",
+    "eslint": "^8.21.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-vue": "^9.3.0",
+    "npm": "^8.17.0",
+    "postcss": "^8.4.16",
+    "tailwindcss": "^3.1.8",
+    "typescript": "^4.6.4",
+    "unplugin-auto-import": "^0.11.1",
+    "unplugin-element-plus": "^0.4.1",
+    "unplugin-vue-components": "^0.22.4",
+    "vite": "^3.0.6",
+    "vue-tsc": "^0.39.5"
   }
 }

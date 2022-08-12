@@ -1,57 +1,18 @@
-<template>
-  <div class="label-button">
-    <div class="icon" :class="{ selected: selected }">
-      <img :src="src" />
-    </div>
-    <p class="label">{{ label }}</p>
-  </div>
-</template>
-<script>
-export default {
-  props: {
-    label: {
-      type: String,
-      required: true,
-    },
-    src: {
-      type: String,
-      default: "",
-    },
-    selected: {
-      type: Boolean,
-      default: false,
-    },
-  },
-};
+<script lang="ts" setup>
+interface Props {
+  label: string;
+  src: string;
+  selected?: string;
+}
+
+defineProps<Props>();
 </script>
 
-<style scoped>
-.label-button {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  margin: 0 10px;
-}
-
-.label {
-  color: white;
-  font-size: 10px;
-  margin: 5px;
-}
-
-.icon {
-  border-radius: 50%;
-  padding: 8px;
-  display: flex;
-}
-
-.selected {
-  background-color: rgba(255, 255, 255, 0.5);
-}
-
-.icon img {
-  width: 30px;
-  height: 30px;
-}
-</style>
+<template>
+  <div class="inline-flex items-center justify-center flex-col mx-2">
+    <div class="rounded-full p-2 flex" :class="selected ? 'bg-white/50' : ''">
+      <img :src="src" class="w-8 h-8" />
+    </div>
+    <p class="text-white m-1 text-xs">{{ label }}</p>
+  </div>
+</template>

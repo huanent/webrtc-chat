@@ -1,98 +1,62 @@
+<script lang="ts" setup>
+import { onMounted, ref, watch } from "vue";
+
+interface Props {
+  stream: MediaStream;
+  fit?: string;
+  muted?: boolean;
+  mirror?: boolean;
+  float?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), { fit: "cover" });
+const video = ref<HTMLVideoElement>();
+const player = ref<HTMLDivElement>();
+let offset = { x: 0, y: 0 };
+
+watch(
+  () => props.float,
+  (value) => {
+    if (!player.value) return;
+    player.value.style.top = value ? "15px" : "0";
+    player.value.style.left = value ? "15px" : "0";
+  }
+);
+
+const dragstart = (e: any) => {
+  const rect = e.target.getBoundingClientRect();
+  offset.x = e.x - rect.x;
+  offset.y = e.y - rect.y;
+};
+
+const dragend = (e: any) => {
+  e.target.style.top = e.y - offset.y + "px";
+  e.target.style.left = e.x - offset.x + "px";
+};
+</script>
+
 <template>
   <div
-    class="player"
     ref="player"
-    @dragstart="dragstart"
-    @dragend="dragend"
+    class="absolute transition-all h-full w-full"
     :draggable="float"
     :class="{ float: float }"
+    @dragstart="dragstart"
+    @dragend="dragend"
   >
     <video
       ref="video"
+      class="h-full w-full"
       autoplay
       :muted="muted"
-      :style="{ objectFit: fit }"
+      :style="{ objectFit: fit } as any"
       :class="{ mirror: mirror }"
       :srcObject="stream"
     ></video>
   </div>
 </template>
 
-<script>
-import { onMounted, ref, watch } from "vue";
-export default {
-  props: {
-    stream: {
-      type: Object,
-      required: false,
-    },
-    fit: {
-      type: String,
-      default: "cover",
-    },
-    muted: {
-      type: Boolean,
-      required: false,
-      default: true,
-    },
-    mirror: {
-      type: Boolean,
-      required: false,
-      default: true,
-    },
-    float: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
-  },
-  setup(props) {
-    const video = ref(null);
-    const player = ref(null);
-    let offset = { x: 0, y: 0 };
-
-    watch(
-      () => props.float,
-      (value) => {
-        if (!player.value) return;
-        player.value.style.top = value ? "15px" : "0";
-        player.value.style.left = value ? "15px" : "0";
-      }
-    );
-
-    const dragstart = (e) => {
-      const rect = e.target.getBoundingClientRect();
-      offset.x = e.x - rect.x;
-      offset.y = e.y - rect.y;
-    };
-
-    const dragend = (e) => {
-      e.target.style.top = e.y - offset.y + "px";
-      e.target.style.left = e.x - offset.x + "px";
-    };
-
-    return {
-      video,
-      player,
-      dragstart,
-      dragend,
-    };
-  },
-};
-</script>
-
 <style scoped>
-.player {
-  position: absolute;
-  transition: all 0.3s;
-}
-
-.player,
-video {
-  width: 100%;
-  height: 100%;
-}
-
 .player::after {
   content: "";
   position: absolute;
