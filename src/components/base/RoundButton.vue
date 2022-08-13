@@ -18,7 +18,7 @@ interface Props {
   size: number;
   color: string;
   src: string;
-  disabled: boolean;
+  disabled?: boolean;
 }
 
 withDefaults(defineProps<Props>(), { size: 38, color: "#fff" });

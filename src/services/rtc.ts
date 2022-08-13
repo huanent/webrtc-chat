@@ -1,5 +1,5 @@
-import { createIM } from "./im";
 import { ref } from "vue";
+import { createConnection } from "./socket";
 
 export const localStream = ref<MediaStream>();
 export const oppositeStream = ref<MediaStream>();
@@ -14,22 +14,27 @@ async function getLocalStream() {
 }
 
 export async function createRoom(isOffer: boolean) {
-  const sendMsg = await createIM("23432", async (e: any) => {
-    if (e.type == "ice" && e.data) {
-      pc.addIceCandidate(new RTCIceCandidate(e.data));
-    }
+  const send = await createConnection(
+    isOffer ? "a" : "b",
+    async (from: string, data: string) => {
+      const message = JSON.parse(data);
 
-    if (e.type == "offer") {
-      await pc.setRemoteDescription(new RTCSessionDescription(e.data));
-      const answer = await pc.createAnswer();
-      await pc.setLocalDescription(answer);
-      sendMsg("answer", answer);
-    }
+      if (message.type == "ice" && message.data) {
+        pc.addIceCandidate(new RTCIceCandidate(message.data));
+      }
 
-    if (e.type == "answer") {
-      await pc.setRemoteDescription(new RTCSessionDescription(e.data));
+      if (message.type == "offer") {
+        await pc.setRemoteDescription(new RTCSessionDescription(message.data));
+        const answer = await pc.createAnswer();
+        await pc.setLocalDescription(answer);
+        send("answer", answer);
+      }
+
+      if (message.type == "answer") {
+        await pc.setRemoteDescription(new RTCSessionDescription(message.data));
+      }
     }
-  });
+  );
 
   let pc = new RTCPeerConnection({
     iceServers: [
@@ -60,13 +65,13 @@ export async function createRoom(isOffer: boolean) {
     .getTracks()
     .forEach((track) => pc.addTrack(track, localStream.value!));
 
-  pc.onicecandidate = (e) => sendMsg("ice", e.candidate);
+  pc.onicecandidate = (e) => send("ice", e.candidate);
   pc.ontrack = (e) => (oppositeStream.value = e.streams[0]);
 
   if (isOffer) {
     let offer = await pc.createOffer();
     await pc.setLocalDescription(offer);
-    sendMsg("offer", offer);
+    send("offer", offer);
   }
 }
 
