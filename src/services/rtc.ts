@@ -1,5 +1,5 @@
 import { ref } from "vue";
-import { createConnection } from "./socket";
+import { createConnection } from "./chat";
 
 export const localStream = ref<MediaStream>();
 export const oppositeStream = ref<MediaStream>();
@@ -16,8 +16,9 @@ async function getLocalStream() {
 export async function createRoom(isOffer: boolean) {
   const send = await createConnection(
     isOffer ? "a" : "b",
-    async (from: string, data: string) => {
-      const message = JSON.parse(data);
+    async (from: string, message: any) => {
+      console.log(message);
+      if (!message || !message.data) return;
 
       if (message.type == "ice" && message.data) {
         pc.addIceCandidate(new RTCIceCandidate(message.data));
