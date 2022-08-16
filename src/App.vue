@@ -8,8 +8,16 @@ import { useLocalStream } from "@/services/rtc";
 import { ref } from "vue";
 import { sessions } from "@/store/session";
 
-document.addEventListener("dragover", (e) => e.preventDefault());
 const localStream = ref<MediaStream>();
+const players = new Set<InstanceType<typeof VideoPlayer>>();
+
+document.addEventListener("dragover", (e) => e.preventDefault());
+
+document.addEventListener("pointerdown", () => {
+  for (const player of players) {
+    player?.play();
+  }
+});
 
 (async () => {
   localStream.value = await useLocalStream();
@@ -18,7 +26,11 @@ const localStream = ref<MediaStream>();
 
 <template>
   <div class="absolute inset-0">
-    <VideoPlayer v-if="localStream" :stream="localStream" />
+    <VideoPlayer
+      v-if="localStream"
+      :ref="(c:any) => players.add(c)"
+      :stream="localStream"
+    />
     <CtrlBar />
     <ToolBar />
     <ConfigDialog />
@@ -26,6 +38,7 @@ const localStream = ref<MediaStream>();
       <template v-for="connection of sessions" :key="connection.name">
         <VideoPlayer
           v-if="connection.stream.value"
+          :ref="(c:any) => players.add(c)"
           class="w-64 h-64"
           :stream="connection.stream.value"
           :mirror="false"

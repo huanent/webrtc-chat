@@ -12,6 +12,12 @@ interface Props {
 withDefaults(defineProps<Props>(), { fit: "cover", mirror: true, label: "" });
 const video = ref<HTMLVideoElement>();
 const player = ref<HTMLDivElement>();
+
+function play() {
+  video.value?.play();
+}
+
+defineExpose({ play });
 </script>
 
 <template>
