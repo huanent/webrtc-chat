@@ -2,7 +2,7 @@
 import "./style.css";
 import CtrlBar from "@/components/CtrlBar.vue";
 import ToolBar from "@/components/ToolBar.vue";
-import UserNameDialog from "./components/UserNameDialog.vue";
+import ConfigDialog from "./components/ConfigDialog.vue";
 import VideoPlayer from "./components/VideoPlayer.vue";
 import { useLocalStream } from "@/services/rtc";
 import { ref } from "vue";
@@ -21,7 +21,7 @@ const localStream = ref<MediaStream>();
     <VideoPlayer v-if="localStream" :stream="localStream" />
     <CtrlBar />
     <ToolBar />
-    <UserNameDialog />
+    <ConfigDialog />
     <div class="absolute top-4 left-4 right-4 space-x-2 flex">
       <template v-for="connection of sessions" :key="connection.name">
         <VideoPlayer

@@ -1,6 +1,7 @@
 import { ref } from "vue";
 import { SendMessage } from "./chat";
 import { closeSession } from "@/store/session";
+import { stun, turn, turnUserName, turnCredential } from "@/store/app";
 
 const _localStream = ref<MediaStream>();
 
@@ -65,28 +66,39 @@ export async function useAnswer(from: string, offer: any, send: SendMessage) {
 async function usePeerConnection(from: string, send: SendMessage) {
   const oppositeStream = ref<MediaStream>();
 
+  const iceServers: RTCIceServer[] = [];
+  if (stun.value) iceServers.push({ urls: [stun.value] });
+
+  if (turn.value)
+    iceServers.push({
+      urls: [turn.value],
+      username: turnUserName.value,
+      credential: turnCredential.value,
+    });
+
+  if (!iceServers.length) {
+    iceServers.push({
+      urls: [
+        "stun:stun01.sipphone.com",
+        "stun:stun.ekiga.net",
+        "stun:stun.fwdnet.net",
+        "stun:stun.ideasip.com",
+        "stun:stun.iptel.org",
+        "stun:stun.rixtelecom.se",
+        "stun:stun.schlund.de",
+        "stun:stunserver.org",
+        "stun:stun.softjoys.com",
+        "stun:stun.voiparound.com",
+        "stun:stun.voipbuster.com",
+        "stun:stun.voipstunt.com",
+        "stun:stun.voxgratia.org",
+        "stun:stun.xten.com",
+      ],
+    });
+  }
+
   let peerConnection = new RTCPeerConnection({
-    iceServers: [
-      {
-        urls: [
-          "stun:23.21.150.121",
-          "stun:stun01.sipphone.com",
-          "stun:stun.ekiga.net",
-          "stun:stun.fwdnet.net",
-          "stun:stun.ideasip.com",
-          "stun:stun.iptel.org",
-          "stun:stun.rixtelecom.se",
-          "stun:stun.schlund.de",
-          "stun:stunserver.org",
-          "stun:stun.softjoys.com",
-          "stun:stun.voiparound.com",
-          "stun:stun.voipbuster.com",
-          "stun:stun.voipstunt.com",
-          "stun:stun.voxgratia.org",
-          "stun:stun.xten.com",
-        ],
-      },
-    ],
+    iceServers,
   });
 
   const localStream = await useLocalStream();

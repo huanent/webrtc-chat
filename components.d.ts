@@ -7,6 +7,7 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    ConfigDialog: typeof import('./src/components/ConfigDialog.vue')['default']
     CtrlBar: typeof import('./src/components/CtrlBar.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElDialog: typeof import('element-plus/es')['ElDialog']
@@ -16,7 +17,6 @@ declare module '@vue/runtime-core' {
     LabelButton: typeof import('./src/components/base/LabelButton.vue')['default']
     RoundButton: typeof import('./src/components/base/RoundButton.vue')['default']
     ToolBar: typeof import('./src/components/ToolBar.vue')['default']
-    UserNameDialog: typeof import('./src/components/UserNameDialog.vue')['default']
     VideoPlayer: typeof import('./src/components/VideoPlayer.vue')['default']
   }
 }

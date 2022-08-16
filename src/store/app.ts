@@ -4,6 +4,10 @@ import { ref } from "vue";
 import { handleAnswer, handleIce, makeAnswer, makeOffer } from "./session";
 
 export const userName = ref<string>(`user_${new Date().getTime()}`);
+export const stun = ref<string>("");
+export const turn = ref<string>("");
+export const turnUserName = ref<string>("");
+export const turnCredential = ref<string>("");
 
 let senMessage: Awaited<ReturnType<typeof useChat>>;
 
