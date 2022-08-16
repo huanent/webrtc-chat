@@ -10,7 +10,12 @@ function startApp() {
 </script>
 
 <template>
-  <ElDialog v-model="show" :show-close="false" title="设置">
+  <ElDialog
+    v-model="show"
+    :show-close="false"
+    title="设置"
+    :close-on-click-modal="false"
+  >
     <ElForm label-width="120px">
       <ElFormItem label="name">
         <ElInput v-model="userName" />
