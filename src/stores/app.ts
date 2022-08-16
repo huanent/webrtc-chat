@@ -19,16 +19,18 @@ async function onMessage(from: string, data: ChatMessage) {
       makeOffer(from);
       break;
 
+    case "ice":
+      handleIce(from, data.data);
+      break;
+
     case "offer":
       makeAnswer(from, data.data);
       break;
 
     case "answer":
-      const connection = connections.value.find((f) => f.from == from);
-      await connection.pc.setRemoteDescription(
-        new RTCSessionDescription(data.data)
-      );
+      handleAnswer(from, data.data);
       break;
+
     default:
       break;
   }
@@ -42,4 +44,14 @@ async function makeOffer(from: string) {
 async function makeAnswer(from: string, data: any) {
   const { oppositeStream, pc } = await useAnswer(data, senMessage);
   connections.value.push({ from, pc, oppositeStream });
+}
+
+async function handleAnswer(from: string, data: any) {
+  const connection = connections.value.find((f) => f.from == from);
+  await connection.pc.setRemoteDescription(new RTCSessionDescription(data));
+}
+
+async function handleIce(from: string, data: any) {
+  const connection = connections.value.find((f) => f.from == from);
+  connection.pc.addIceCandidate(new RTCIceCandidate(data));
 }

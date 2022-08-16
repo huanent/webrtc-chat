@@ -1,4 +1,4 @@
 export interface ChatMessage {
-  type: "enter" | "offer" | "answer";
+  type: "enter" | "offer" | "answer" | "ice";
   data: any;
 }
