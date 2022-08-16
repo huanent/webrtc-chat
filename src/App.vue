@@ -30,6 +30,7 @@ document.addEventListener("pointerdown", () => {
       v-if="localStream"
       :ref="(c:any) => players.add(c)"
       :stream="localStream"
+      class="w-full h-full"
     />
     <CtrlBar />
     <ToolBar />
