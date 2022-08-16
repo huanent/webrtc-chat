@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import { userName } from "@/stores/app";
+import { userName, initApp } from "@/store/app";
 import { ref } from "vue";
-import { initApp } from "@/stores/app";
 const show = ref(true);
 
 function startApp() {

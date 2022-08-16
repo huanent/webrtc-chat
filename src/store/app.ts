@@ -1,10 +1,10 @@
 import { useChat } from "@/services/chat";
 import { useAnswer, useOffer } from "@/services/rtc";
 import { ChatMessage, Session } from "@/types";
-import { ref } from "vue";
+import { shallowReactive, ref } from "vue";
 
 export const userName = ref<string>(`user_${new Date().getTime()}`);
-export const connections = ref<Session[]>([]);
+export const connections = shallowReactive<Session[]>([]);
 
 let senMessage: Awaited<ReturnType<typeof useChat>>;
 
@@ -39,7 +39,7 @@ async function onMessage(message: ChatMessage) {
 async function makeOffer(from: string) {
   const { oppositeStream, peerConnection } = await useOffer(from, senMessage);
 
-  connections.value.push({
+  connections.push({
     name: from,
     peerConnection,
     stream: oppositeStream,
@@ -52,7 +52,7 @@ async function makeAnswer(from: string, data: any) {
     data,
     senMessage
   );
-  connections.value.push({
+  connections.push({
     name: from,
     peerConnection,
     stream: oppositeStream,
@@ -60,7 +60,7 @@ async function makeAnswer(from: string, data: any) {
 }
 
 async function handleAnswer(from: string, data: any) {
-  const connection = connections.value.find((f) => f.name == from);
+  const connection = connections.find((f) => f.name == from);
   await connection?.peerConnection.setRemoteDescription(
     new RTCSessionDescription(data)
   );
@@ -68,6 +68,6 @@ async function handleAnswer(from: string, data: any) {
 
 async function handleIce(from: string, data: any) {
   if (!data) return;
-  const connection = connections.value.find((f) => f.name == from);
+  const connection = connections.find((f) => f.name == from);
   connection?.peerConnection.addIceCandidate(new RTCIceCandidate(data));
 }

@@ -1,37 +1,21 @@
 <script lang="ts" setup>
-import { ref, watch } from "vue";
+import { ref } from "vue";
 
 interface Props {
   stream: MediaStream;
   fit?: string;
   muted?: boolean;
   mirror?: boolean;
+  label?: string;
 }
 
-withDefaults(defineProps<Props>(), { fit: "cover" });
+withDefaults(defineProps<Props>(), { fit: "cover", mirror: true, label: "" });
 const video = ref<HTMLVideoElement>();
 const player = ref<HTMLDivElement>();
-let offset = { x: 0, y: 0 };
-
-const dragstart = (e: any) => {
-  const rect = e.target.getBoundingClientRect();
-  offset.x = e.x - rect.x;
-  offset.y = e.y - rect.y;
-};
-
-const dragend = (e: any) => {
-  e.target.style.top = e.y - offset.y + "px";
-  e.target.style.left = e.x - offset.x + "px";
-};
 </script>
 
 <template>
-  <div
-    ref="player"
-    class="relative transition-all h-full w-full"
-    @dragstart="dragstart"
-    @dragend="dragend"
-  >
+  <div ref="player" class="relative transition-all h-full w-full">
     <video
       ref="video"
       class="h-full w-full"
@@ -41,6 +25,12 @@ const dragend = (e: any) => {
       :class="{ mirror: mirror }"
       :srcObject="stream"
     ></video>
+    <div
+      v-if="label"
+      class="absolute text-center p-2 inset-0 top-auto bg-black/20 text-white"
+    >
+      {{ label }}
+    </div>
   </div>
 </template>
 

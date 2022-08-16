@@ -15,8 +15,8 @@
 
 <script lang="ts" setup>
 interface Props {
-  size: number;
-  color: string;
+  size?: number;
+  color?: string;
   src: string;
   disabled?: boolean;
 }

@@ -8,6 +8,6 @@ export interface ChatMessage {
 
 export interface Session {
   name: string;
-  stream: Ref<MediaStream | undefined>;
   peerConnection: RTCPeerConnection;
+  stream: Ref<MediaStream | undefined>;
 }

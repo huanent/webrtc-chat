@@ -1,17 +1,18 @@
 import { ref } from "vue";
 import { SendMessage } from "./chat";
+import { connections } from "@/store/app";
 
-export const localStream = ref<MediaStream>();
+const _localStream = ref<MediaStream>();
 
-async function getLocalStream() {
-  if (localStream.value) return localStream.value;
+export async function useLocalStream() {
+  if (!_localStream.value) {
+    _localStream.value = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: true,
+    });
+  }
 
-  localStream.value = await navigator.mediaDevices.getUserMedia({
-    video: true,
-    audio: true,
-  });
-
-  return localStream.value;
+  return _localStream.value;
 }
 
 export async function recordScreen() {
@@ -88,7 +89,7 @@ async function usePeerConnection(from: string, send: SendMessage) {
     ],
   });
 
-  const localStream = await getLocalStream();
+  const localStream = await useLocalStream();
 
   localStream
     .getTracks()
@@ -96,5 +97,19 @@ async function usePeerConnection(from: string, send: SendMessage) {
 
   peerConnection.onicecandidate = (e) => send("ice", e.candidate, from);
   peerConnection.ontrack = (e) => (oppositeStream.value = e.streams[0]);
+  peerConnection.onconnectionstatechange = (e) => {
+    switch (peerConnection.iceConnectionState) {
+      case "closed":
+      case "failed":
+      case "disconnected":
+        const index = connections.findIndex((f) => f.name == from);
+        if (index > -1) connections.splice(index, 1);
+        peerConnection.close();
+        break;
+
+      default:
+        break;
+    }
+  };
   return { peerConnection, oppositeStream };
 }
