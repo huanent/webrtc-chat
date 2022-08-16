@@ -110,5 +110,16 @@ async function usePeerConnection(from: string, send: SendMessage) {
         break;
     }
   };
+
+  peerConnection.onsignalingstatechange = (e) => {
+    switch (peerConnection.signalingState) {
+      case "closed":
+        closeSession(from);
+        break;
+
+      default:
+        break;
+    }
+  };
   return { peerConnection, oppositeStream };
 }
