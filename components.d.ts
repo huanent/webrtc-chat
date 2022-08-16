@@ -17,7 +17,6 @@ declare module '@vue/runtime-core' {
     RoundButton: typeof import('./src/components/base/RoundButton.vue')['default']
     ToolBar: typeof import('./src/components/ToolBar.vue')['default']
     UserNameDialog: typeof import('./src/components/UserNameDialog.vue')['default']
-    VideoGroup: typeof import('./src/components/VideoGroup.vue')['default']
     VideoPlayer: typeof import('./src/components/VideoPlayer.vue')['default']
   }
 }
