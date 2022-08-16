@@ -1,6 +1,5 @@
 import { ref } from "vue";
 import { SendMessage } from "./chat";
-import { connections } from "@/store/app";
 import { closeSession } from "@/store/session";
 
 const _localStream = ref<MediaStream>();
@@ -98,7 +97,8 @@ async function usePeerConnection(from: string, send: SendMessage) {
 
   peerConnection.onicecandidate = (e) => send("ice", e.candidate, from);
   peerConnection.ontrack = (e) => (oppositeStream.value = e.streams[0]);
-  peerConnection.onconnectionstatechange = (e) => {
+
+  peerConnection.addEventListener("connectionstatechange", (e) => {
     switch (peerConnection.iceConnectionState) {
       case "closed":
       case "failed":
@@ -109,9 +109,9 @@ async function usePeerConnection(from: string, send: SendMessage) {
       default:
         break;
     }
-  };
+  });
 
-  peerConnection.onsignalingstatechange = (e) => {
+  peerConnection.addEventListener("signalingstatechange", (e) => {
     switch (peerConnection.signalingState) {
       case "closed":
         closeSession(from);
@@ -120,6 +120,6 @@ async function usePeerConnection(from: string, send: SendMessage) {
       default:
         break;
     }
-  };
+  });
   return { peerConnection, oppositeStream };
 }

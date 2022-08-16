@@ -1,10 +1,9 @@
 import { useChat } from "@/services/chat";
-import { ChatMessage, Session } from "@/types";
-import { shallowReactive, ref } from "vue";
+import { ChatMessage } from "@/types";
+import { ref } from "vue";
 import { handleAnswer, handleIce, makeAnswer, makeOffer } from "./session";
 
 export const userName = ref<string>(`user_${new Date().getTime()}`);
-export const connections = shallowReactive<Session[]>([]);
 
 let senMessage: Awaited<ReturnType<typeof useChat>>;
 

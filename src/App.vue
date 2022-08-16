@@ -6,7 +6,7 @@ import UserNameDialog from "./components/UserNameDialog.vue";
 import VideoPlayer from "./components/VideoPlayer.vue";
 import { useLocalStream } from "@/services/rtc";
 import { ref } from "vue";
-import { connections } from "@/store/app";
+import { sessions } from "@/store/session";
 
 document.addEventListener("dragover", (e) => e.preventDefault());
 const localStream = ref<MediaStream>();
@@ -23,7 +23,7 @@ const localStream = ref<MediaStream>();
     <ToolBar />
     <UserNameDialog />
     <div class="absolute top-4 left-4 right-4 space-x-2 flex">
-      <template v-for="connection of connections" :key="connection.name">
+      <template v-for="connection of sessions" :key="connection.name">
         <VideoPlayer
           v-if="connection.stream.value"
           class="w-64 h-64"

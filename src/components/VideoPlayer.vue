@@ -15,7 +15,7 @@ const player = ref<HTMLDivElement>();
 </script>
 
 <template>
-  <div ref="player" class="relative transition-all h-full w-full">
+  <div ref="player" class="relative transition-all">
     <video
       ref="video"
       class="h-full w-full"
