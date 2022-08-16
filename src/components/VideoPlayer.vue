@@ -1,27 +1,17 @@
 <script lang="ts" setup>
-import { onMounted, ref, watch } from "vue";
+import { ref, watch } from "vue";
 
 interface Props {
   stream: MediaStream;
   fit?: string;
   muted?: boolean;
   mirror?: boolean;
-  float?: boolean;
 }
 
-const props = withDefaults(defineProps<Props>(), { fit: "cover" });
+withDefaults(defineProps<Props>(), { fit: "cover" });
 const video = ref<HTMLVideoElement>();
 const player = ref<HTMLDivElement>();
 let offset = { x: 0, y: 0 };
-
-watch(
-  () => props.float,
-  (value) => {
-    if (!player.value) return;
-    player.value.style.top = value ? "15px" : "0";
-    player.value.style.left = value ? "15px" : "0";
-  }
-);
 
 const dragstart = (e: any) => {
   const rect = e.target.getBoundingClientRect();
@@ -38,9 +28,7 @@ const dragend = (e: any) => {
 <template>
   <div
     ref="player"
-    class="absolute transition-all h-full w-full"
-    :draggable="float"
-    :class="{ float: float }"
+    class="relative transition-all h-full w-full"
     @dragstart="dragstart"
     @dragend="dragend"
   >
@@ -70,15 +58,5 @@ const dragend = (e: any) => {
 
 .mirror {
   transform: rotateY(180deg);
-}
-
-.float {
-  width: 150px;
-  height: 100px;
-  top: 15px;
-  left: 15px;
-  border-radius: 5%;
-  overflow: hidden;
-  box-shadow: rgba(0, 0, 0, 0.397) 5px 5px 10px;
 }
 </style>

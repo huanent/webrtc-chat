@@ -1,10 +1,10 @@
 import { useChat } from "@/services/chat";
 import { useAnswer, useOffer } from "@/services/rtc";
-import { ChatMessage } from "@/types";
+import { ChatMessage, Session } from "@/types";
 import { ref } from "vue";
 
 export const userName = ref<string>(`user_${new Date().getTime()}`);
-export const connections = ref<any[]>([]);
+export const connections = ref<Session[]>([]);
 
 let senMessage: Awaited<ReturnType<typeof useChat>>;
 
@@ -13,22 +13,22 @@ export async function initApp() {
   senMessage("enter", "");
 }
 
-async function onMessage(from: string, data: ChatMessage) {
-  switch (data.type) {
+async function onMessage(message: ChatMessage) {
+  switch (message.type) {
     case "enter":
-      makeOffer(from);
+      makeOffer(message.from);
       break;
 
     case "ice":
-      handleIce(from, data.data);
+      handleIce(message.from, message.data);
       break;
 
     case "offer":
-      makeAnswer(from, data.data);
+      makeAnswer(message.from, message.data);
       break;
 
     case "answer":
-      handleAnswer(from, data.data);
+      handleAnswer(message.from, message.data);
       break;
 
     default:
@@ -37,21 +37,37 @@ async function onMessage(from: string, data: ChatMessage) {
 }
 
 async function makeOffer(from: string) {
-  const { oppositeStream, pc } = await useOffer(senMessage);
-  connections.value.push({ from, pc, oppositeStream });
+  const { oppositeStream, peerConnection } = await useOffer(from, senMessage);
+
+  connections.value.push({
+    name: from,
+    peerConnection,
+    stream: oppositeStream,
+  });
 }
 
 async function makeAnswer(from: string, data: any) {
-  const { oppositeStream, pc } = await useAnswer(data, senMessage);
-  connections.value.push({ from, pc, oppositeStream });
+  const { oppositeStream, peerConnection } = await useAnswer(
+    from,
+    data,
+    senMessage
+  );
+  connections.value.push({
+    name: from,
+    peerConnection,
+    stream: oppositeStream,
+  });
 }
 
 async function handleAnswer(from: string, data: any) {
-  const connection = connections.value.find((f) => f.from == from);
-  await connection.pc.setRemoteDescription(new RTCSessionDescription(data));
+  const connection = connections.value.find((f) => f.name == from);
+  await connection?.peerConnection.setRemoteDescription(
+    new RTCSessionDescription(data)
+  );
 }
 
 async function handleIce(from: string, data: any) {
-  const connection = connections.value.find((f) => f.from == from);
-  connection.pc.addIceCandidate(new RTCIceCandidate(data));
+  if (!data) return;
+  const connection = connections.value.find((f) => f.name == from);
+  connection?.peerConnection.addIceCandidate(new RTCIceCandidate(data));
 }

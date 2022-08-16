@@ -1,20 +1,17 @@
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
 import VideoPlayer from "./VideoPlayer.vue";
 import { localStream } from "../services/rtc";
 import { connections } from "@/stores/app";
 </script>
 
 <template>
-  <VideoPlayer
-    v-for="connection of connections"
-    :key="connection.from"
-    class="player fill"
-    :stream="connection.oppositeStream!"
-  />
-  <VideoPlayer
-    class="player fill"
-    :stream="localStream!"
-    :float="!!connections.length"
-  />
+  <div>
+    <VideoPlayer
+      v-for="connection of connections"
+      :key="connection.name"
+      class="w-32 h-32"
+      :stream="connection.stream!"
+    />
+    <VideoPlayer class="w-32 h-32" :stream="localStream!" />
+  </div>
 </template>
