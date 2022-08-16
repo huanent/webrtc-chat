@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "element-plus": "^2.2.12",
-    "mitt": "^3.0.0",
     "vue": "^3.2.37"
   },
   "devDependencies": {

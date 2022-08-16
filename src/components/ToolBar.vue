@@ -2,8 +2,6 @@
 import { ref } from "vue";
 import LabelButton from "./base/LabelButton.vue";
 import { recordScreen } from "../services/rtc";
-import { isOffer } from "../services/common";
-import { ElMessage } from "element-plus";
 
 const recorder = ref();
 
@@ -15,11 +13,6 @@ const record = async () => {
     recorder.value = null;
   }
 };
-
-async function copyShareUrl() {
-  await navigator.clipboard.writeText(`${location.href}?is-offer=true`);
-  ElMessage.success("Copied");
-}
 </script>
 
 <template>
@@ -29,12 +22,6 @@ async function copyShareUrl() {
       src="icon/lz.svg"
       :class="{ record: recorder }"
       @click="record"
-    />
-    <LabelButton
-      v-if="!isOffer()"
-      label="分享"
-      src="icon/lz.svg"
-      @click="copyShareUrl"
     />
   </div>
 </template>

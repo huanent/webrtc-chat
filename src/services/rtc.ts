@@ -1,6 +1,7 @@
 import { ref } from "vue";
 import { SendMessage } from "./chat";
 import { connections } from "@/store/app";
+import { closeSession } from "@/store/session";
 
 const _localStream = ref<MediaStream>();
 
@@ -102,9 +103,7 @@ async function usePeerConnection(from: string, send: SendMessage) {
       case "closed":
       case "failed":
       case "disconnected":
-        const index = connections.findIndex((f) => f.name == from);
-        if (index > -1) connections.splice(index, 1);
-        peerConnection.close();
+        closeSession(from);
         break;
 
       default:
